@@ -1,79 +1,32 @@
-<!-- index.html -->
-<!doctype html>
-
-<!-- ASSIGN OUR ANGULAR MODULE -->
-<html ng-app="eggDrop">
-  <head>
-    <!-- META -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
-
-    <title>Egg Drop Data Entry</title>
-
-    <!-- SCROLLS -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
-    <style>
-        html                    { overflow-y:scroll; }
-        body                    { padding-top:50px; }
-        #todo-list              { margin-bottom:30px; }
-    </style>
-
-    <!-- SPELLS -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
-    <script src="core.js"></script>
-
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <meta charset="utf-8" />
+    <title>Tri-Cities Egg Drop Competition</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+    <link href="app-content/app.css" rel="stylesheet" />
 </head>
-<!-- SET THE CONTROLLER AND GET ALL TODOS -->
-<body ng-controller="mainController">
-    <div class="container">
+<body>
+    <div ng-class="{ 'alert': flash, 'alert-success': flash.type === 'success', 'alert-danger': flash.type === 'error' }" ng-if="flash" ng-bind="flash.message"></div>
+    <div ng-view></div>
 
-        <!-- HEADER AND TODO COUNT -->
-        <div class="jumbotron text-center">
-            <h1>Total Entrants: <span class="label label-info">{{ drops.length }}</span></h1>
-        </div>
+    <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="//code.angularjs.org/1.6.0/angular.min.js"></script>
+    <script src="//code.angularjs.org/1.6.0/angular-route.min.js"></script>
+    <script src="//code.angularjs.org/1.6.0/angular-cookies.min.js"></script>
 
-        <!-- TODO LIST -->
-        <div id="todo-list" class="row">
-            <div class="col-sm-4 col-sm-offset-4">
+    <script src="app.js"></script>
+    <script src="app-services/authentication.service.js"></script>
+    <script src="app-services/flash.service.js"></script>
 
-                <!-- LOOP OVER THE TODOS IN $scope.todos -->
-                <div class="checkbox" ng-repeat="drop in drops">
-                    <label>
-                        <input type="checkbox" ng-click="deleteEntrant(drops._id)"> {{ drop.fname }} {{drop.lname}} {{drop.team}} ({{drop.category}})
-                    </label>
-                </div>
+    <!-- Real user service that uses an api -->
+    <!-- <script src="app-services/user.service.js"></script> -->
 
-            </div>
-        </div>
+    <!-- Fake user service for demo that uses local storage -->
+    <script src="app-services/user.service.local-storage.js"></script>
 
-        <!-- FORM TO CREATE TODOS -->
-        <div id="todo-form" class="row">
-            <div class="col-sm-8 col-sm-offset-2 text-center">
-                <form>
-                    <div class="form-group">
-
-                        <!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
-                      <input type="text" class="form-control input-sm" placeholder="First Name" ng-model="entrantData.fname">
-                      <input type="text" class="form-control input-sm" placeholder="Last Name" ng-model="entrantData.lname">
-                      <input type="text" class="form-control input-sm" placeholder="Team Name" ng-model="entrantData.team">
-                      <select ng-model="entrantData.category">
-                        <option value="Elementary">Elementary</option>
-                        <option value="Middle">Middle</option>
-                        <option value="High">High</option>
-                        <option value="Adult">Adult</option>
-                        <option value="Team">Team</option>
-                      </select>
-                      <input type="hidden" value=2018 ng-model="entrantData.year">
-                    </div>
-
-                    <!-- createToDo() WILL CREATE NEW TODOS -->
-                    <button type="submit" class="btn btn-primary btn-lg" ng-click="createEntrant()">Add</button>
-                </form>
-            </div>
-        </div>
-
-    </div>
-
+    <script src="home/home.controller.js"></script>
+    <script src="login/login.controller.js"></script>
+    <script src="register/register.controller.js"></script>
 </body>
 </html>

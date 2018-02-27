@@ -5,7 +5,8 @@ const dropRouter = express.Router();
 
 dropRouter.route('/')
     .get((req,res) => {
-        Entrant.find({}, (err, drops) => {
+        var thisYear = new Date().getFullYear()
+        Entrant.find({year:thisYear}, (err, drops) => {
           res.json(drops)
         })
     })

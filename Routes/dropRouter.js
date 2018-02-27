@@ -21,7 +21,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var dropRouter = _express2.default.Router();
 
 dropRouter.route('/').get(function (req, res) {
-  _entrantModel2.default.find({}, function (err, drops) {
+  var thisYear = new Date().getFullYear();
+  _entrantModel2.default.find({ year: thisYear }, function (err, drops) {
     res.json(drops);
   });
 }).post(function (req, res) {
