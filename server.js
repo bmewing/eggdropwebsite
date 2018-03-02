@@ -20,6 +20,10 @@ var _dropRouter = require('./Routes/dropRouter.js');
 
 var _dropRouter2 = _interopRequireDefault(_dropRouter);
 
+var _loginRouter = require('./Routes/loginRouter.js');
+
+var _loginRouter2 = _interopRequireDefault(_loginRouter);
+
 var _mlabconfig = require('./mlabconfig.jsconfig');
 
 var _mlabconfig2 = _interopRequireDefault(_mlabconfig);
@@ -33,7 +37,16 @@ var db = _mongoose2.default.connect(_mlabconfig2.default.admin);
 app.use(_bodyParser2.default.json());
 app.use(_bodyParser2.default.urlencoded({ extended: true }));
 app.use('/api/drops', _dropRouter2.default);
+app.use('/api/login', _loginRouter2.default);
 app.use(_express2.default.static(__dirname + '/public'));
+
+app.get('/search/*', function (req, res) {
+  res.sendFile('search.html', { root: _path2.default.join(__dirname, './public') });
+});
+
+app.get('/data/*', function (req, res) {
+  res.sendFile('data.html', { root: _path2.default.join(__dirname, './public') });
+});
 
 app.get('*', function (req, res) {
   res.sendFile('index.html', { root: _path2.default.join(__dirname, './public') });
