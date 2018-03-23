@@ -44,17 +44,20 @@
       .state('listRound1', {
         url : '/round1',
         templateUrl : '../data-round1.tpl',
-        controller : 'AddController'
+        controller : 'Round1Finalists'
       })
       .state('listRound2', {
         url : '/round2',
         templateUrl : '../data-round2.tpl',
-        controller : 'AddController'
+        controller : 'Round2Finalists'
       });
   }]);
 
   app.controller('LoginController', function($scope, $rootScope, $stateParams, $state, LoginService, $http) {
+    LoginService.login('no','no');
+    
     $rootScope.title = "Please Login";
+    $rootScope.activePage = "none";
     
     $scope.formSubmit = function() {
       if(LoginService.login($scope.username, $scope.password)) {
@@ -69,8 +72,255 @@
     
   });
   
-  app.controller('AddController', function($scope, $rootScope, $stateParams, $state, LoginService) {
+  app.controller('Round1Finalists',function($scope, $rootScope, $stateParams, $state, LoginService, $http){
+    $rootScope.title = "Kingsport Egg Drop Data Entry"
+    
+    refreshData();
+    
+    function keepOnlyWithDrops(obj){
+      return(obj.drop.length > 0)
+    }
+    
+    function kor1(obj){
+      return(obj.round == 1);
+    }
+    
+    function keepOnlyRound1(obj){
+      obj.drop = obj.drop.filter(kor1)
+      return(obj)
+    }
+    
+    function refreshData(){
+      $http.get('/api/drops')
+      .then(function(data){
+        var tmp = data.data;
+        tmp = tmp.filter(keepOnlyWithDrops).map(keepOnlyRound1);
+        console.log(tmp);
+        $rootScope.drops = tmp;
+      })
+    }
+    
+    function filterCategory(cat,drop){
+      if(drop.drop.length > 0){
+        return drop.category == cat && !drop.drop[0].cracked;
+      } else {
+        return false;
+      }
+      
+    }
+    
+    function sortCategory(a,b) {
+      if (a.drop[0].score < b.drop[0].score)
+        return -1;
+      if (a.drop[0].score > b.drop[0].score)
+        return 1;
+      return 0;
+    }
+    
+    function justElementary(){
+//       refreshData();
+      var tmp = $rootScope.drops;
+      $scope.elementaryDrops = tmp.filter(filterCategory.bind(null,"Elementary")).sort(sortCategory).slice(0,3);
+    }
+    
+    function justMiddle(){
+//       refreshData();
+      var tmp = $rootScope.drops;
+      $scope.middleDrops = tmp.filter(filterCategory.bind(null,"Middle")).sort(sortCategory).slice(0,3);
+    }
+    
+    function justHigh(){
+//       refreshData();
+      var tmp = $rootScope.drops;
+      $scope.highDrops = tmp.filter(filterCategory.bind(null,"High")).sort(sortCategory).slice(0,3);
+    }
+    
+    function justAdult(){
+//       refreshData();
+      var tmp = $rootScope.drops;
+      $scope.adultDrops = tmp.filter(filterCategory.bind(null,"Adult")).sort(sortCategory).slice(0,3);
+    }
+    
+    function justTeam(){
+//       refreshData();
+      var tmp = $rootScope.drops;
+      $scope.teamDrops = tmp.filter(filterCategory.bind(null,"Team")).sort(sortCategory).slice(0,3);
+    }
+    
+    $scope.fetchRound1Finalists = function(){
+      justElementary();
+      justMiddle();
+      justHigh();
+      justAdult();
+      justTeam();
+    }
+  });
+  
+  app.controller('Round2Finalists',function($scope, $rootScope, $stateParams, $state, LoginService, $http){
+    $rootScope.title = "Kingsport Egg Drop Data Entry"
+    refreshData();
+    
+    function collapseNames(obj){
+      if(obj.category == "Team"){
+        obj.name = obj.team;
+      } else {
+        obj.name = obj.fname + ' ' + obj.lname;
+      }
+      return(obj)
+    }
+    
+    function keepOnlyWithDrops(obj){
+      return(obj.drop.length > 0)
+    }
+    
+    function kor2(obj){
+      return(obj.round == 2);
+    }
+    
+    function keepOnlyRound2(obj){
+      obj.drop = obj.drop.filter(kor2)
+      return(obj)
+    }
+    
+    function sortCategory(a,b) {
+      if (a.drop[0].score < b.drop[0].score)
+        return -1;
+      if (a.drop[0].score > b.drop[0].score)
+        return 1;
+      return 0;
+    }
+    
+    function compare(a,b) {
+      if (a.name < b.name)
+        return -1;
+      if (a.name > b.name)
+        return 1;
+      return 0;
+    }
+    
+    function refreshData(){
+      $http.get('/api/drops')
+      .then(function(data){
+        var tmp = data.data;
+        tmp = tmp.map(collapseNames);
+        $rootScope.drops = tmp.sort(compare);
+      })
+    }
+    
+    function refreshRound2(){
+      var tmp = $rootScope.drops;
+      tmp = tmp.filter(keepOnlyWithDrops).map(keepOnlyRound2).filter(keepOnlyWithDrops);
+      console.log(tmp);
+      tmp = tmp.sort(sortCategory).slice(0,3);
+      $rootScope.round2drops = tmp;
+    }
+    
+    $scope.fetchRound2Finalists = function(){
+      refreshRound2();
+    }
+  });
+  
+  app.controller('AddController', function($scope, $rootScope, $stateParams, $state, LoginService, $http) {
     $rootScope.title = "Kingsport Egg Drop Data Entry";
+    $scope.entrantData = {};
+    $scope.localdrop1 = {};
+    
+    refreshData();
+    
+    function compare(a,b) {
+      if (a.name < b.name)
+        return -1;
+      if (a.name > b.name)
+        return 1;
+      return 0;
+    }
+    
+    function collapseNames(obj){
+      if(obj.category == "Team"){
+        obj.name = obj.team;
+      } else {
+        obj.name = obj.fname + ' ' + obj.lname;
+      }
+      return(obj)
+    }
+    
+    function keepOnlyWithDrops(obj){
+      return(obj.drop.length === 1)
+    }
+    
+    function keepOnlyWithoutDrops(obj){
+      return(obj.drop.length === 0);
+    }
+    
+    function refreshData(){
+      $http.get('/api/drops')
+      .then(function(data){
+        var tmp = data.data;
+        tmp = tmp.map(collapseNames);
+        $rootScope.drops = tmp.sort(compare);
+        $rootScope.drop1done = tmp.sort(compare).filter(keepOnlyWithDrops);
+        $rootScope.drop1needed = tmp.sort(compare).filter(keepOnlyWithoutDrops);
+      })
+    }
+    
+    function filterID(drop) {
+      return drop._id == $scope.drop1Data.dropID;
+    }
+    
+    $scope.getSelectedDrops = function(){
+      $scope.localdrop1 = $rootScope.drops.filter(filterID)
+    }
+    
+    function filterID2(drop) {
+      return drop._id == $scope.drop2Data.dropID;
+    }
+    
+    $scope.getSelectedDrops2 = function(){
+      $scope.localdrop1 = $rootScope.drops.filter(filterID2)
+    }
+    
+    $scope.createEntrant = function(){
+      var input = $scope.entrantData;
+      input.year = new Date().getFullYear();
+      
+      $http.post('/api/drops', input)
+          .then(function(data){
+            $scope.entrantData = {};
+            refreshData();
+          });
+    }
+    
+    $scope.deleteEntrant = function(){
+      var rem = $scope.deleteID;
+      $http.delete('/api/drops/'+rem)
+        .then(function(data){
+        refreshData();
+      })
+    }
+    
+    $scope.recordDrop1 = function(){
+      var input = $scope.drop1Data;
+      console.log(input.cracked)
+      input.round = 1;
+      input.score = !input.cracked * (((30*(input.dweight - input.eweight)) / 89) + (40 * input.zone / 10));
+      $http.post('/api/drops/'+input.dropID,input)
+        .then(function(data){
+          $scope.drop1Data = {};
+          refreshData();
+        })
+    }
+    
+    $scope.recordDrop2 = function(){
+      var input = $scope.drop2Data;
+      console.log(input.cracked)
+      input.round = 2;
+      input.score = !input.cracked * (((30*(input.dweight - input.eweight)) / 89) + (30 * input.nparts / 3) + (40 * input.zone / 10));
+      $http.post('/api/drops/'+input.dropID,input)
+        .then(function(data){
+          $scope.drop2Data = {};
+          refreshData();
+        })
+    }
     
   });
   

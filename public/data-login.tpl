@@ -2,7 +2,7 @@
   <h3>Login Page</h3>
 
   <form ng-submit="formSubmit()" class="form">
-    <div class="col-md-4">
+    <div class="col-md-8">
       <div class="form-group">
         <input type="text" class="form-control" ng-model="username" placeholder="username" required=""/>
       </div> 
