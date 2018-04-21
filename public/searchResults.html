@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <script src="//code.angularjs.org/1.6.7/angular.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.0.4/fuse.min.js"></script>
+    <script src="http://kpteggdropresults.com/searchResults.js"></script>
+    <base href="/" />
+    <title>Kingsport Egg Drop Individual Results</title>
+  </head>
+  <body>
+    <center>
+    <div class="container" ng-app="myApp" ng-controller="results">
+      <h1>
+        Individual Egg Drop Data
+      </h1>
+      <big>Recorded data for <strong>{{ind.name}}</strong> ({{ind.category}})</big>
+      <h3>
+        {{ drop1title }}
+      </h3>
+      {{ drop1dweight }}<br> {{drop1eweight}}<br> {{drop1zone}}<br><br><strong>{{drop1score}}</strong><br>{{drop1topScore}}<br><em>{{drop1topScoreWarning}}</em>
+      <h3>
+        {{ drop2title }}
+      </h3>
+      {{ drop2dweight }}<br> {{drop2eweight}}<br> {{drop2zone}}<br> {{drop2nparts}}<br><br><strong>{{drop2score}}</strong><br>
+    </div>
+  </center>
+  </body>
+</html>

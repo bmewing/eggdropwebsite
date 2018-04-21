@@ -1,5 +1,38 @@
 <html>
+  <head>
+    <script src="//code.angularjs.org/1.6.7/angular.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.0.4/fuse.min.js"></script>
+    <script src="http://kpteggdropresults.com/search.js"></script>
+    
+    <title>Kingsport Egg Drop Search</title>
+  </head>
   <body>
-    This is the search
+    <center>
+    <div class="container" ng-app="myApp" ng-controller="search">
+      <h1>
+        Search for your results
+      </h1>
+      Enter the name you used to register (or your team name if you're a team) in the search box below.<br>
+      <br>
+      <form class="form" ng-submit="searchEntrants()">
+        <div class="col-md-8">
+          <div class="form-group">
+            <input type="text" class="form-control" ng-model="searchString" placeholder="Your Name"/>
+          </div>
+          <br>
+          <small>There are currently {{drops.length}} entrants in the system.</small>
+          <br>
+          <br>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-lg">Search</button>
+          </div>
+
+        </div>
+      </form>
+      <hr>
+      <h3>{{ searchTitle }}</h3>
+      <div ng-repeat="match in matches"> <a ng-href="/searchResults/{{match._id}}">{{ match.name }} ({{match.category}})</a><br></div>
+    </div>
+  </center>
   </body>
 </html>

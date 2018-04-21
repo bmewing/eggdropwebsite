@@ -8,7 +8,8 @@ const dropModel = new Schema({
   eweight: Number,
   nparts: Number,
   zone: Number,
-  cracked: Boolean
+  cracked: Boolean,
+  dt: String
 })
 
 const entrantModel = new Schema({

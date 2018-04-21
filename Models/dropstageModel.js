@@ -12,9 +12,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Schema = _mongoose2.default.Schema;
 
-var loginModel = new Schema({
-  user: String,
-  pass: String
+var dropstageModel = new Schema({
+  year: String,
+  stage: Number
 });
 
-exports.default = _mongoose2.default.model('login', loginModel, 'login');
+exports.default = _mongoose2.default.model('stage', dropstageModel, 'stage');

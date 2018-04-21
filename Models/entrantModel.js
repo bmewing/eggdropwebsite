@@ -19,7 +19,8 @@ var dropModel = new Schema({
   eweight: Number,
   nparts: Number,
   zone: Number,
-  cracked: Boolean
+  cracked: Boolean,
+  dt: String
 });
 
 var entrantModel = new Schema({

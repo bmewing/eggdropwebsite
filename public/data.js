@@ -173,6 +173,10 @@
       return(obj.drop.length > 0)
     }
     
+    function dropCracked(obj){
+      return(typeof obj.drop[0].cracked == "undefined");
+    }
+    
     function kor2(obj){
       return(obj.round == 2);
     }
@@ -209,8 +213,7 @@
     
     function refreshRound2(){
       var tmp = $rootScope.drops;
-      tmp = tmp.filter(keepOnlyWithDrops).map(keepOnlyRound2).filter(keepOnlyWithDrops);
-      console.log(tmp);
+      tmp = tmp.filter(keepOnlyWithDrops).map(keepOnlyRound2).filter(keepOnlyWithDrops).filter(dropCracked);
       tmp = tmp.sort(sortCategory).slice(0,3);
       $rootScope.round2drops = tmp;
     }
@@ -300,9 +303,10 @@
     
     $scope.recordDrop1 = function(){
       var input = $scope.drop1Data;
-      console.log(input.cracked)
       input.round = 1;
       input.score = !input.cracked * (((30*(input.dweight - input.eweight)) / 89) + (40 * input.zone / 10));
+      input.dt = new Date().getTime().toString();
+      console.log(input)
       $http.post('/api/drops/'+input.dropID,input)
         .then(function(data){
           $scope.drop1Data = {};
@@ -312,9 +316,10 @@
     
     $scope.recordDrop2 = function(){
       var input = $scope.drop2Data;
-      console.log(input.cracked)
       input.round = 2;
       input.score = !input.cracked * (((30*(input.dweight - input.eweight)) / 89) + (30 * input.nparts / 3) + (40 * input.zone / 10));
+      input.dt = new Date().getTime().toString();
+      console.log(input)
       $http.post('/api/drops/'+input.dropID,input)
         .then(function(data){
           $scope.drop2Data = {};
