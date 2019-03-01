@@ -35,7 +35,8 @@ var _mlabconfig2 = _interopRequireDefault(_mlabconfig);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var app = (0, _express2.default)();
-var port = 80;
+var PORT = 8080;
+var HOST = '0.0.0.0';
 var db = _mongoose2.default.connect(_mlabconfig2.default.admin);
 
 app.use(_bodyParser2.default.json());
@@ -65,6 +66,5 @@ app.get('*', function (req, res) {
   res.sendFile('index.html', { root: _path2.default.join(__dirname, './public') });
 });
 
-app.listen(port, function () {
-  console.log('http://localhost:' + port);
-});
+app.listen(PORT, HOST);
+console.log('Running on http://' + HOST + ':' + PORT);

@@ -8,7 +8,8 @@ import topScorerouter from './Routes/topScorerouter.js'
 import mlabConfig from './mlabconfig.jsconfig'
 
 const app = express();
-const port = 80;
+const PORT = 8080;
+const HOST = '0.0.0.0';
 const db = mongoose.connect(mlabConfig.admin)
 
 app.use(bodyParser.json());
@@ -38,6 +39,5 @@ app.get('*',(req,res)=>{
   res.sendFile('index.html',{root: path.join(__dirname,'./public')});
 })
 
-app.listen(port, () => {
-    console.log(`http://localhost:${port}`)
-})
+app.listen(PORT, HOST);
+console.log(`Running on http://${HOST}:${PORT}`);
